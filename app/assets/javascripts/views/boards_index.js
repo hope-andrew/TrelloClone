@@ -27,13 +27,14 @@ TrelloClone.Views.BoardsIndex = Backbone.CompositeView.extend({
 
   addBoard: function(event) {
     event.preventDefault();
-    console.log($(event.currentTarget));
-    debugger;
-    // var newBoard = new TrelloClone.Models.Board({title: , user_id: });
-    // newBoard.save({
-    //   success: function() {
-    //     this.collection.add(newBoard)
-    //   }.bind(this)
-    // });
+    var attrs = this.$el.find(".new-title").serializeJSON();
+    var newBoard = new TrelloClone.Models.Board();
+    var that = this;
+    newBoard.set(attrs);
+    newBoard.save({}, {
+      success: function() {
+        that.collection.add(newBoard);
+      }
+    });
   }
 });

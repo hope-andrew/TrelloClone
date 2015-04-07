@@ -2,7 +2,8 @@ TrelloClone.Views.BoardShow = Backbone.CompositeView.extend({
   template: JST["board/show"],
 
   initialize: function() {
-    this.listenTo(this.model.lists(), "add", this.addListSubview);
+    this.listenTo(this.model.lists(), "add", this.addListSubview.bind(this));
+    this.listenTo(this.model.lists(), "remove", this.removeListSubview.bind(this));
     this.listenTo(this.model, 'sync add', this.render);
     this.model.lists().each(function(list) {
       this.addListSubview(list);
@@ -12,7 +13,7 @@ TrelloClone.Views.BoardShow = Backbone.CompositeView.extend({
   },
 
   events: {
-    "click button.new-list": "addList"
+    "click button.new-list": "addList",
   },
 
   render: function() {
@@ -28,17 +29,29 @@ TrelloClone.Views.BoardShow = Backbone.CompositeView.extend({
     this.addSubview("ul.board-lists", newListView);
   },
 
+  removeListSubview: function(list) {
+    var listView = "";
+    this.subviews("ul.board-lists").forEach(function(view){
+      if (view.model === list) {
+        listView = view;
+      }
+    });
+    this.removeSubview("ul.board-lists", listView);
+  },
+
   addList: function(event) {
     event.preventDefault();
-    var params = $(event.currentTarget).serializeJSON();
-    // Set up serialize JSON (require in application.js) and set params for new list items
-    debugger;
-    var newListItem = new TrelloClone.Models.List({title: params["title"]});
-
+    var attrs = this.$el.find(".new-list-title").serializeJSON().list;
+    attrs.board_id = this.model.id;
+    var newListItem = new TrelloClone.Models.List();
+    var view = this;
+    newListItem.set(attrs);
     newListItem.save({}, {
       success: function () {
-        this.collection.add(newListItem);
-      }.bind(this)
+        view.model.lists().add(newListItem);
+        view.$el.find(".new-list-title").val("");
+      }
     });
-  }
+  },
+
 });

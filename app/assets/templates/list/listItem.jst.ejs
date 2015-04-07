@@ -1,1 +1,13 @@
-<%= list.escape("title") %> 
+<div class="list-item" >
+<strong><%= list.escape("title") %></strong>
+<br>
+<ul class="cards" >
+</ul>
+<br>
+<form class="new-card" >
+  <input type="text" class="card-title form-control" name="card[title]">
+  <input type="submit" class="card-submit btn btn-default" value="Add Card">
+</form>
+<br>
+<button class="delete-list-item btn btn-default" > Delete List Item </button>
+</div>
