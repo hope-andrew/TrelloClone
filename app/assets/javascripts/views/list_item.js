@@ -5,7 +5,7 @@ TrelloClone.Views.ListItem = Backbone.CompositeView.extend({
   initialize: function() {
     this.listenTo(this.model.cards(), "add", this.addCardSubview.bind(this));
     this.listenTo(this.model, 'sync add', this.render);
-    // this.listenTo(this.model.cards(), "remove", this.removeCardSubview.bind(this));
+    this.listenTo(this.model.cards(), "remove", this.removeCardSubview.bind(this));
     this.model.cards().each(function(card) {
       this.addCardSubview(card);
     }.bind(this));
@@ -49,13 +49,13 @@ TrelloClone.Views.ListItem = Backbone.CompositeView.extend({
     });
   },
 
-  removeListSubview: function(list) {
-    var listView = "";
-    this.subviews("ul.board-lists").forEach(function(view){
-      if (view.model === list) {
-        listView = view;
+  removeCardSubview: function(card) {
+    var cardView = "";
+    this.subviews("ul.cards").forEach(function(view){
+      if (view.model === card) {
+        cardView = view;
       }
     });
-    this.removeSubview("ul.board-lists", listView);
+    this.removeSubview("ul.cards", cardView);
   }
 });

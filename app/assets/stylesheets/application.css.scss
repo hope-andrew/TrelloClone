@@ -28,3 +28,13 @@
 body {
   background: #3399FF
 }
+
+.delete-card {
+  visibility: hidden;
+  display: inline-block;
+}
+
+li:hover > .delete-card {
+  visibility: visible;
+  float: right;
+}
